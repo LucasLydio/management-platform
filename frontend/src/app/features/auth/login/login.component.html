@@ -1,0 +1,36 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <p class="eyebrow">Welcome back</p>
+    <h1>Sign in and ship your tasks.</h1>
+    <p class="muted">Use the seeded admin account after running the backend seed.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+      <label>
+        E-mail
+        <input type="email" formControlName="email" />
+      </label>
+
+      <label>
+        Password
+        <input type="password" formControlName="password" />
+      </label>
+
+      <p class="error" *ngIf="error()">{{ error() }}</p>
+
+      <app-button type="submit" [disabled]="form.invalid || loading()">
+        {{ loading() ? "Signing in..." : "Sign in" }}
+      </app-button>
+    </form>
+
+    <div class="google-box">
+      <label>
+        Google ID token
+        <input type="text" [value]="googleToken()" (input)="googleToken.set($any($event.target).value)" />
+      </label>
+      <app-button variant="ghost" (click)="submitGoogle()">Continue with Google</app-button>
+    </div>
+
+    <a routerLink="/auth/register">Create an account</a>
+  </div>
+</section>
+

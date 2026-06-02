@@ -1,0 +1,59 @@
+.shell-header {
+  align-items: center;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.84);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem clamp(1rem, 5vw, 4rem);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand,
+.shell-nav {
+  align-items: center;
+  display: flex;
+  gap: 0.9rem;
+}
+
+.brand {
+  color: #0f172a;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.brand__mark {
+  align-items: center;
+  background: #4f46e5;
+  border-radius: 0.8rem;
+  color: #fff;
+  display: inline-flex;
+  height: 2.4rem;
+  justify-content: center;
+  width: 2.4rem;
+}
+
+.shell-main {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+[data-theme="dark"] .shell-header {
+  background: rgba(15, 23, 42, 0.86);
+}
+
+[data-theme="dark"] .brand {
+  color: #f8fafc;
+}
+
+@media (max-width: 720px) {
+  .shell-header,
+  .shell-nav {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+

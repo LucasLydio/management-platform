@@ -1,0 +1,17 @@
+.animation-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.animation-layer {
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animation-layer {
+    animation: none !important;
+    transition: none !important;
+  }
+}

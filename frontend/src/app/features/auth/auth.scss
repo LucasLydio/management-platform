@@ -1,0 +1,62 @@
+.auth-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 1rem;
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+  max-width: 460px;
+  padding: 2rem;
+  width: 100%;
+}
+
+.auth-form,
+.google-box {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+label {
+  color: #334155;
+  display: grid;
+  font-weight: 700;
+  gap: 0.45rem;
+}
+
+input {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.9rem;
+  min-height: 2.9rem;
+  padding: 0.75rem 1rem;
+}
+
+.eyebrow {
+  color: #4f46e5;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: #64748b;
+}
+
+.error {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .auth-card {
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] label {
+  color: #e2e8f0;
+}
+

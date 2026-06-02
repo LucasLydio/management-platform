@@ -1,0 +1,17 @@
+<header class="shell-header">
+  <a class="brand" routerLink="/">
+    <span class="brand__mark">M</span>
+    <span>Management Tasks</span>
+  </a>
+
+  <nav class="shell-nav" *ngIf="authService.currentUser() as user">
+    <span>{{ user.name || user.email }}</span>
+    <app-button variant="ghost" (click)="themeService.toggle()">Theme</app-button>
+    <app-button variant="ghost" (click)="authService.logout()">Logout</app-button>
+  </nav>
+</header>
+
+<main class="shell-main">
+  <router-outlet />
+</main>
+

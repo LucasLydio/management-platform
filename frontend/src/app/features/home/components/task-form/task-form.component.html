@@ -1,0 +1,30 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="task-form">
+  <label>
+    Task title
+    <input type="text" formControlName="title" placeholder="Close sprint plan" />
+  </label>
+
+  <label>
+    Description
+    <textarea formControlName="description" rows="3" placeholder="Add the tiny context future-you will need"></textarea>
+  </label>
+
+  <div class="task-form__row">
+    <label>
+      Priority
+      <select formControlName="priority">
+        <option value="LOW">Low</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="HIGH">High</option>
+      </select>
+    </label>
+
+    <label>
+      Due date
+      <input type="datetime-local" formControlName="dueDate" />
+    </label>
+  </div>
+
+  <app-button type="submit" [disabled]="form.invalid">Add task</app-button>
+</form>
+

@@ -1,0 +1,52 @@
+<section class="hero">
+  <div>
+    <p class="eyebrow">MVP ready</p>
+    <h1>Manage tasks with auth, pagination, cache, and real-time updates.</h1>
+    <p>Small enough to understand. Complete enough to deploy. A suspiciously good combo.</p>
+  </div>
+</section>
+
+<section class="dashboard">
+  <app-task-form (taskCreated)="createTask($event)" />
+
+  <div class="tasks-panel">
+    <form [formGroup]="filters" (ngSubmit)="applyFilters()" class="filters">
+      <input type="search" formControlName="search" placeholder="Search tasks" />
+      <select formControlName="status">
+        <option value="">All status</option>
+        <option value="TODO">Todo</option>
+        <option value="IN_PROGRESS">In progress</option>
+        <option value="DONE">Done</option>
+      </select>
+      <app-button type="submit">Filter</app-button>
+    </form>
+
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <ng-container *ngIf="tasks$ | async as response">
+      <div class="tasks-grid" *ngIf="response.data.length; else emptyState">
+        <app-task-card
+          *ngFor="let task of response.data"
+          [task]="task"
+          (deleteTask)="deleteTask($event)"
+          (statusChange)="updateStatus($event)"
+        />
+      </div>
+
+      <div class="pagination">
+        <app-button variant="ghost" [disabled]="!response.meta.hasPreviousPage" (click)="previousPage(response)">
+          Previous
+        </app-button>
+        <span>Page {{ response.meta.page }} of {{ response.meta.totalPages }}</span>
+        <app-button variant="ghost" [disabled]="!response.meta.hasNextPage" (click)="nextPage(response)">
+          Next
+        </app-button>
+      </div>
+    </ng-container>
+  </div>
+</section>
+
+<ng-template #emptyState>
+  <div class="empty-state">No tasks yet. Add one and give future-you a breadcrumb.</div>
+</ng-template>
+

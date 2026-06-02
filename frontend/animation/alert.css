@@ -1,0 +1,473 @@
+.pending-alert-demo {
+  min-height: 380px;
+  display: grid;
+  place-items: center;
+  padding: 3rem 1rem;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.96), transparent 35%),
+    linear-gradient(135deg, #f8fafc, #e9edf4);
+}
+
+.pending-alert-scene {
+  --entrance-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --spring-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --soft-ease: cubic-bezier(0.2, 0.9, 0.22, 1);
+
+  width: min(350px, 92vw);
+  height: 300px;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.96);
+}
+
+.pending-alert-scene[data-animate="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    opacity 520ms var(--entrance-ease),
+    transform 720ms var(--spring-ease);
+}
+
+.pending-alert-stage {
+  position: relative;
+  width: 320px;
+  height: 260px;
+  display: grid;
+  place-items: center;
+}
+
+.pending-alert-ring {
+  position: absolute;
+  width: 220px;
+  height: 130px;
+  border-radius: 1.8rem;
+  border: 2px solid rgba(245, 158, 11, 0.28);
+  opacity: 0;
+  transform: scale(0.86);
+  will-change: transform, opacity;
+}
+
+.pending-alert-scene[data-animate="true"] .pending-alert-ring {
+  animation: pending-ring-pulse 2400ms var(--soft-ease) infinite;
+  animation-delay: 1100ms;
+}
+
+.pending-task-card {
+  position: relative;
+  width: 250px;
+  min-height: 150px;
+  padding: 1.15rem;
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.96));
+  box-shadow:
+    0 24px 60px rgba(25, 35, 55, 0.14),
+    inset 0 0 0 1px rgba(71, 85, 105, 0.08);
+  opacity: 0;
+  transform: translate3d(0, 18px, 0) scale(0.94);
+  will-change: transform, opacity;
+}
+
+.pending-alert-scene[data-animate="true"] .pending-task-card {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    opacity 540ms var(--entrance-ease),
+    transform 760ms var(--spring-ease);
+  transition-delay: 220ms;
+}
+
+.pending-task-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(245, 158, 11, 0.14), transparent 32%),
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.18), transparent 35%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pending-alert-scene[data-animate="true"] .pending-task-card::before {
+  animation: pending-card-glow 2200ms var(--soft-ease) infinite;
+  animation-delay: 1300ms;
+}
+
+.pending-task-card__top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pending-task-card__icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 1rem;
+  background: #fff7ed;
+  box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.18);
+}
+
+.pending-task-card__icon span {
+  width: 18px;
+  height: 22px;
+  border-radius: 0.35rem;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 5px,
+      rgba(146, 64, 14, 0.24) 6px
+    ),
+    #fef3c7;
+  box-shadow: inset 0 0 0 1px rgba(180, 83, 9, 0.2);
+}
+
+.pending-task-card__content {
+  display: grid;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.pending-task-card__label {
+  color: #92400e;
+  font: 800 0.72rem/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.pending-task-card__title {
+  width: 86px;
+  height: 8px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+.pending-task-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #b45309;
+  font: 900 0.62rem/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.2);
+  transform: scale(0.88);
+  opacity: 0;
+}
+
+.pending-alert-scene[data-animate="true"] .pending-task-card__badge {
+  animation: pending-badge-pop 720ms var(--spring-ease) both;
+  animation-delay: 980ms;
+}
+
+.pending-task-card__badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+}
+
+.pending-alert-scene[data-animate="true"] .pending-task-card__badge-dot {
+  animation: pending-dot-pulse 1200ms var(--soft-ease) infinite;
+  animation-delay: 1450ms;
+}
+
+.pending-task-card__lines {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.62rem;
+  margin-top: 1.2rem;
+}
+
+.pending-task-card__lines span {
+  height: 8px;
+  border-radius: 999px;
+  background: #dbe3ec;
+  opacity: 0;
+  transform: scaleX(0.5);
+  transform-origin: left center;
+}
+
+.pending-task-card__lines span:nth-child(1) {
+  width: 76%;
+}
+
+.pending-task-card__lines span:nth-child(2) {
+  width: 88%;
+}
+
+.pending-task-card__lines span:nth-child(3) {
+  width: 54%;
+}
+
+.pending-alert-scene[data-animate="true"] .pending-task-card__lines span {
+  animation: pending-line-enter 580ms var(--entrance-ease) both;
+  animation-delay: calc(620ms + var(--motion-index) * 120ms);
+}
+
+.pending-task-card__footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.15rem;
+  opacity: 0;
+  transform: translate3d(10px, 0, 0);
+}
+
+.pending-alert-scene[data-animate="true"] .pending-task-card__footer {
+  animation: pending-footer-enter 620ms var(--spring-ease) both;
+  animation-delay: 1120ms;
+}
+
+.pending-clock {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #f59e0b;
+  border-radius: 50%;
+  background: #fffbeb;
+  box-shadow: 0 8px 16px rgba(180, 83, 9, 0.14);
+}
+
+.pending-clock::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 9px;
+  height: 4px;
+  border-radius: 999px;
+  background: #f59e0b;
+  transform: translateX(-50%);
+}
+
+.pending-clock__hand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  border-radius: 999px;
+  background: #92400e;
+  transform-origin: center bottom;
+}
+
+.pending-clock__hand--hour {
+  height: 7px;
+  transform: translate3d(-50%, -100%, 0) rotate(45deg);
+}
+
+.pending-clock__hand--minute {
+  height: 9px;
+  transform: translate3d(-50%, -100%, 0) rotate(0deg);
+}
+
+.pending-alert-scene[data-animate="true"] .pending-clock__hand--minute {
+  animation: pending-clock-tick 1600ms var(--soft-ease) infinite;
+  animation-delay: 1400ms;
+}
+
+.pending-task-card__days {
+  color: #7c4a03;
+  font: 800 0.72rem/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.pending-alert-marks {
+  position: absolute;
+  left: 50%;
+  top: 50px;
+  width: 240px;
+  height: 110px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.pending-alert-marks span {
+  position: absolute;
+  width: 8px;
+  height: 22px;
+  border-radius: 999px;
+  background: #f59e0b;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0) scaleY(0.5);
+  transform-origin: center bottom;
+}
+
+.pending-alert-marks span:nth-child(1) {
+  left: 20px;
+  top: 52px;
+  transform: rotate(-28deg) scaleY(0.5);
+}
+
+.pending-alert-marks span:nth-child(2) {
+  left: 112px;
+  top: 0;
+}
+
+.pending-alert-marks span:nth-child(3) {
+  right: 22px;
+  top: 52px;
+  transform: rotate(28deg) scaleY(0.5);
+}
+
+.pending-alert-scene[data-animate="true"] .pending-alert-marks span {
+  animation: pending-alert-mark 760ms var(--spring-ease) both;
+  animation-delay: calc(1350ms + var(--motion-index) * 90ms);
+}
+
+@keyframes pending-line-enter {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes pending-footer-enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(10px, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes pending-badge-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pending-card-glow {
+  0%,
+  100% {
+    opacity: 0.18;
+  }
+
+  50% {
+    opacity: 0.44;
+  }
+}
+
+@keyframes pending-ring-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+
+  42% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.13);
+  }
+}
+
+@keyframes pending-dot-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.55);
+    opacity: 0.45;
+  }
+}
+
+@keyframes pending-clock-tick {
+  0% {
+    transform: translate3d(-50%, -100%, 0) rotate(0deg);
+  }
+
+  45% {
+    transform: translate3d(-50%, -100%, 0) rotate(78deg);
+  }
+
+  100% {
+    transform: translate3d(-50%, -100%, 0) rotate(120deg);
+  }
+}
+
+@keyframes pending-alert-mark {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scaleY(0.5);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate3d(0, -4px, 0) scaleY(1.08);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0) scaleY(0.72);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pending-alert-scene,
+  .pending-alert-ring,
+  .pending-task-card,
+  .pending-task-card::before,
+  .pending-task-card__badge,
+  .pending-task-card__badge-dot,
+  .pending-task-card__lines span,
+  .pending-task-card__footer,
+  .pending-clock__hand--minute,
+  .pending-alert-marks span {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .pending-alert-scene {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pending-task-card,
+  .pending-task-card__badge,
+  .pending-task-card__footer,
+  .pending-task-card__lines span {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pending-alert-ring,
+  .pending-alert-marks {
+    display: none;
+  }
+}

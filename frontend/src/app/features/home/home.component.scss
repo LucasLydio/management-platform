@@ -1,0 +1,81 @@
+.hero {
+  background: linear-gradient(135deg, #eef2ff, #ecfeff);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding: clamp(1.5rem, 5vw, 3rem);
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+  max-width: 850px;
+}
+
+.eyebrow {
+  color: #4f46e5;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.dashboard {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 360px 1fr;
+}
+
+.tasks-panel,
+.filters {
+  display: grid;
+  gap: 1rem;
+}
+
+.filters {
+  grid-template-columns: 1fr 180px auto;
+}
+
+input,
+select {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.9rem;
+  min-height: 2.75rem;
+  padding: 0.75rem;
+}
+
+.tasks-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.pagination {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.empty-state {
+  border: 1px dashed #94a3b8;
+  border-radius: 1.2rem;
+  color: #64748b;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .hero {
+  background: linear-gradient(135deg, #111827, #0f172a);
+}
+
+@media (max-width: 920px) {
+  .dashboard,
+  .filters {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Box Receiving Papers Animation</title>
+
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./box.css" />
+  <link rel="stylesheet" href="./paper.css" />
+  <link rel="stylesheet" href="./alert.css" />
+</head>
+<body>
+
+<section class="pending-alert-demo">
+  <div class="pending-alert-scene" data-pending-alert aria-label="Pending task alert animation">
+    <div class="pending-alert-stage">
+      <div class="pending-alert-ring" aria-hidden="true"></div>
+
+      <article class="pending-task-card">
+        <div class="pending-task-card__top">
+          <div class="pending-task-card__icon">
+            <span></span>
+          </div>
+
+          <div class="pending-task-card__content">
+            <span class="pending-task-card__label">Pending task</span>
+            <span class="pending-task-card__title"></span>
+          </div>
+
+          <div class="pending-task-card__badge">
+            <span class="pending-task-card__badge-dot"></span>
+            Alert
+          </div>
+        </div>
+
+        <div class="pending-task-card__lines">
+          <span style="--motion-index: 0"></span>
+          <span style="--motion-index: 1"></span>
+          <span style="--motion-index: 2"></span>
+        </div>
+
+        <div class="pending-task-card__footer">
+          <div class="pending-clock" aria-hidden="true">
+            <span class="pending-clock__hand pending-clock__hand--hour"></span>
+            <span class="pending-clock__hand pending-clock__hand--minute"></span>
+          </div>
+
+          <span class="pending-task-card__days">Waiting for days</span>
+        </div>
+      </article>
+
+      <div class="pending-alert-marks" aria-hidden="true">
+        <span style="--motion-index: 0"></span>
+        <span style="--motion-index: 1"></span>
+        <span style="--motion-index: 2"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="new-task-demo">
+  <div class="new-task-scene" data-new-task aria-label="New task paper laying on a shelf animation">
+    <div class="new-task-stage">
+      <div class="new-task-shelf">
+        <div class="new-task-shelf__top"></div>
+        <div class="new-task-shelf__front"></div>
+        <div class="new-task-shelf__shadow"></div>
+      </div>
+
+      <div class="new-task-paper" aria-hidden="true">
+        <div class="new-task-paper__pin"></div>
+
+        <div class="new-task-paper__header">
+          <span class="new-task-paper__badge">NEW</span>
+          <span class="new-task-paper__title"></span>
+        </div>
+
+        <div class="new-task-paper__line new-task-paper__line--one"></div>
+        <div class="new-task-paper__line new-task-paper__line--two"></div>
+        <div class="new-task-paper__line new-task-paper__line--three"></div>
+
+        <div class="new-task-paper__check-row">
+          <span></span>
+          <i></i>
+        </div>
+      </div>
+
+      <div class="new-task-indicator" aria-hidden="true">
+        <span style="--motion-index: 0"></span>
+        <span style="--motion-index: 1"></span>
+        <span style="--motion-index: 2"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="due-box-demo">
+  <div class="due-box-scene" data-due-box aria-label="3D box receiving a due task paper animation">
+    <div class="due-box-stage">
+      <div class="due-paper" aria-hidden="true">
+        <div class="due-paper__wrap"></div>
+        <div class="due-paper__label">DUE</div>
+        <div class="due-paper__line due-paper__line--one"></div>
+        <div class="due-paper__line due-paper__line--two"></div>
+      </div>
+
+      <div class="due-box">
+        <div class="due-box__shadow"></div>
+
+        <div class="due-box__lid due-box__lid--left"></div>
+        <div class="due-box__lid due-box__lid--right"></div>
+
+        <div class="due-box__body">
+          <div class="due-box__face due-box__face--front"></div>
+          <div class="due-box__face due-box__face--left"></div>
+          <div class="due-box__face due-box__face--right"></div>
+          <div class="due-box__inner"></div>
+        </div>
+
+        <div class="due-box__badge">
+          <span></span>
+          Task box
+        </div>
+      </div>
+
+      <div class="due-box-sparkles" aria-hidden="true">
+        <span style="--motion-index: 0"></span>
+        <span style="--motion-index: 1"></span>
+        <span style="--motion-index: 2"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="task-notebook-demo">
+  <div class="task-notebook" data-task-notebook aria-label="Notebook marking completed tasks animation">
+    <div class="task-notebook__paper">
+      <div class="task-notebook__spiral" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="task-notebook__header">
+        <span class="task-notebook__title">Today</span>
+        <span class="task-notebook__subtitle">Ready tasks</span>
+      </div>
+
+      <ul class="task-notebook__list">
+        <li class="task-row" style="--motion-index: 0">
+          <span class="task-row__box">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12.5L10 17L19 7" />
+            </svg>
+          </span>
+          <span class="task-row__line"></span>
+        </li>
+
+        <li class="task-row" style="--motion-index: 1">
+          <span class="task-row__box">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12.5L10 17L19 7" />
+            </svg>
+          </span>
+          <span class="task-row__line"></span>
+        </li>
+
+        <li class="task-row" style="--motion-index: 2">
+          <span class="task-row__box">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12.5L10 17L19 7" />
+            </svg>
+          </span>
+          <span class="task-row__line"></span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="task-pencil" aria-hidden="true">
+      <div class="task-pencil__body"></div>
+      <div class="task-pencil__tip"></div>
+      <div class="task-pencil__eraser"></div>
+    </div>
+  </div>
+</section>
+
+  <script src="./script.js"></script>
+  <script src="./box.js"></script>
+  <script src="./paper.js"></script>
+  <script src="./alert.js"></script>
+</body>
+</html>

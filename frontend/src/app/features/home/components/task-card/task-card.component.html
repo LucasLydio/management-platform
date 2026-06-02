@@ -1,0 +1,19 @@
+<article class="task-card" [ngClass]="'task-card--' + task.priority.toLowerCase()">
+  <div class="task-card__top">
+    <span class="pill">{{ task.status.replace("_", " ") }}</span>
+    <span class="priority">{{ task.priority }}</span>
+  </div>
+
+  <h3>{{ task.title }}</h3>
+  <p *ngIf="task.description">{{ task.description }}</p>
+
+  <small *ngIf="task.dueDate">Due {{ task.dueDate | date: "medium" }}</small>
+
+  <div class="task-card__actions">
+    <app-button variant="ghost" (click)="statusChange.emit({ id: task.id, status: nextStatus(task.status) })">
+      Move to {{ nextStatus(task.status).replace("_", " ") }}
+    </app-button>
+    <app-button variant="ghost" (click)="deleteTask.emit(task.id)">Delete</app-button>
+  </div>
+</article>
+

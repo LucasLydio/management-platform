@@ -1,0 +1,33 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <p class="eyebrow">New here?</p>
+    <h1>Create your management workspace.</h1>
+    <p class="muted">Small, useful, and not allergic to deadlines.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+      <label>
+        Name
+        <input type="text" formControlName="name" />
+      </label>
+
+      <label>
+        E-mail
+        <input type="email" formControlName="email" />
+      </label>
+
+      <label>
+        Password
+        <input type="password" formControlName="password" />
+      </label>
+
+      <p class="error" *ngIf="error()">{{ error() }}</p>
+
+      <app-button type="submit" [disabled]="form.invalid || loading()">
+        {{ loading() ? "Creating..." : "Create account" }}
+      </app-button>
+    </form>
+
+    <a routerLink="/auth/login">Already have an account?</a>
+  </div>
+</section>
+

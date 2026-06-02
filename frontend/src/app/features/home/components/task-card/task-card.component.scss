@@ -1,0 +1,45 @@
+.task-card {
+  background: #fff;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 1.2rem;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem;
+}
+
+.task-card__top,
+.task-card__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: space-between;
+}
+
+.pill,
+.priority {
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.35rem 0.65rem;
+}
+
+.pill {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.priority {
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.task-card--high {
+  border-color: rgba(220, 38, 38, 0.28);
+}
+
+[data-theme="dark"] .task-card {
+  background: #111827;
+}
+

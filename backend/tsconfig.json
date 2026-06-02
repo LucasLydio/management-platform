@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "ignoreDeprecations": "6.0",
+    "rootDir": ".",
+    "outDir": "dist", 
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "types": ["node", "jest"],
+    "typeRoots": ["./src/shared/types", "./node_modules/@types"]
+  },
+  "include": ["src/**/*.ts", "prisma.config.ts"],
+  "exclude": ["dist", "node_modules"]
+}
