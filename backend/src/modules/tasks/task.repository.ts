@@ -12,7 +12,9 @@ export type TaskListFilters = {
   status?: TaskStatus;
 };
 
-const makeWhere = (filters: TaskListFilters): Prisma.TaskWhereInput => ({
+type TaskFilters = Omit<TaskListFilters, "limit" | "page" | "skip">;
+
+const makeWhere = (filters: TaskFilters): Prisma.TaskWhereInput => ({
   ...(filters.role === "COMMON" ? { ownerId: filters.ownerId } : {}),
   ...(filters.status ? { status: filters.status } : {}),
   ...(filters.search
@@ -42,6 +44,14 @@ export class TaskRepository {
     return { items, total };
   }
 
+  listAll(filters: TaskFilters) {
+    return prisma.task.findMany({
+      include: { owner: { select: { email: true, id: true, name: true } } },
+      orderBy: [{ status: "asc" }, { createdAt: "desc" }],
+      where: makeWhere(filters),
+    });
+  }
+
   findById(id: string) {
     return prisma.task.findUnique({ where: { id } });
   }
@@ -64,4 +74,3 @@ export class TaskRepository {
     return prisma.task.delete({ where: { id } });
   }
 }
-

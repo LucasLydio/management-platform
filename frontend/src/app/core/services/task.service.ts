@@ -33,6 +33,18 @@ export class TaskService {
     return this.http.get<PaginatedResponse<Task>>(`${environment.apiUrl}/tasks`, { params });
   }
 
+  listAll(filters: {
+    search?: string;
+    status?: TaskStatus | "";
+  }): Observable<ApiResponse<Task[]>> {
+    let params = new HttpParams();
+
+    params = filters.search ? params.set("search", filters.search) : params;
+    params = filters.status ? params.set("status", filters.status) : params;
+
+    return this.http.get<ApiResponse<Task[]>>(`${environment.apiUrl}/tasks/all`, { params });
+  }
+
   create(input: TaskInput): Observable<ApiResponse<Task>> {
     return this.http.post<ApiResponse<Task>>(`${environment.apiUrl}/tasks`, input);
   }
@@ -61,4 +73,3 @@ export class TaskService {
     });
   }
 }
-

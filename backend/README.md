@@ -51,6 +51,7 @@ Required values:
 - `GET /api/v1/auth/me`
 - `POST /api/v1/auth/logout`
 - `GET /api/v1/tasks?page=1&limit=10&status=TODO&search=text`
+- `GET /api/v1/tasks/all?status=ARCHIVED&search=text`
 - `POST /api/v1/tasks`
 - `PATCH /api/v1/tasks/:id`
 - `DELETE /api/v1/tasks/:id`
@@ -61,6 +62,7 @@ Required values:
 - REST status codes, pagination, validation, and centralized errors
 - Task reads are cached with TTL and invalidated on mutation
 - Common users see only their tasks; admins can list all tasks
+- Task statuses: `TODO`, `IN_PROGRESS`, `DONE`, `ARCHIVED`
 
 ## Validation
 
@@ -68,4 +70,3 @@ Required values:
 npm run typecheck
 npm test
 ```
-

@@ -23,6 +23,7 @@ enum TaskPriority {
 }
 
 enum TaskStatus {
+  ARCHIVED
   DONE
   IN_PROGRESS
   TODO

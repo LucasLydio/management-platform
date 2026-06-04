@@ -1,12 +1,16 @@
-import { NgClass } from "@angular/common";
 import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "app-button",
   standalone: true,
-  imports: [NgClass],
   template: `
-    <button class="app-button" [class.app-button--ghost]="variant === 'ghost'" [disabled]="disabled" [type]="type">
+    <button
+      class="app-button"
+      [attr.form]="form || null"
+      [class.app-button--ghost]="variant === 'ghost'"
+      [disabled]="disabled"
+      [type]="type"
+    >
       <ng-content />
     </button>
   `,
@@ -14,17 +18,14 @@ import { Component, Input } from "@angular/core";
     `
       .app-button {
         align-items: center;
-        background: linear-gradient(135deg, #4f46e5, #06b6d4);
+        background: transparent;
         border: 0;
-        border-radius: 0.9rem;
-        color: #fff;
+        color: #4f46e5;
         cursor: pointer;
         display: inline-flex;
-        font-weight: 700;
         gap: 0.5rem;
         justify-content: center;
-        min-height: 2.75rem;
-        padding: 0.75rem 1rem;
+        padding: .4rem;
       }
 
       .app-button:disabled {
@@ -33,7 +34,6 @@ import { Component, Input } from "@angular/core";
       }
 
       .app-button--ghost {
-        background: rgba(79, 70, 229, 0.1);
         color: #3730a3;
       }
     `,
@@ -41,7 +41,7 @@ import { Component, Input } from "@angular/core";
 })
 export class AppButtonComponent {
   @Input() disabled = false;
-  @Input() type: "button" | "submit" = "button";
+  @Input() form = "";
+  @Input() type: "button" | "number" | "date" | "submit" = "button" ;
   @Input() variant: "primary" | "ghost" = "primary";
 }
-

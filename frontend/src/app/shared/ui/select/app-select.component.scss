@@ -1,0 +1,59 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.app-field {
+  display: grid;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.app-field__label {
+  color: #334155;
+  font-weight: 800;
+}
+
+.app-field__control {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, #64748b 50%) calc(100% - 1rem) 50% / 0.45rem 0.45rem no-repeat,
+    linear-gradient(135deg, #64748b 50%, transparent 50%) calc(100% - 0.72rem) 50% / 0.45rem 0.45rem no-repeat,
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid #cbd5e1;
+  border-radius: 0.9rem;
+  color: #0f172a;
+  min-height: 2.85rem;
+  outline: none;
+  padding: 0.75rem 2.3rem 0.75rem 1rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.app-field__control:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+}
+
+.app-field__hint {
+  color: #64748b;
+}
+
+.app-field--disabled {
+  opacity: 0.7;
+}
+
+[data-theme="dark"] .app-field__label {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .app-field__control {
+  background:
+    linear-gradient(45deg, transparent 50%, #cbd5e1 50%) calc(100% - 1rem) 50% / 0.45rem 0.45rem no-repeat,
+    linear-gradient(135deg, #cbd5e1 50%, transparent 50%) calc(100% - 0.72rem) 50% / 0.45rem 0.45rem no-repeat,
+    rgba(15, 23, 42, 0.9);
+  border-color: #334155;
+  color: #f8fafc;
+}

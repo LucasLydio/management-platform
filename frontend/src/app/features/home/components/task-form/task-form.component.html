@@ -1,30 +1,38 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="task-form">
-  <label>
-    Task title
-    <input type="text" formControlName="title" placeholder="Close sprint plan" />
-  </label>
+<form [id]="formId" [formGroup]="form" (ngSubmit)="submit()" class="task-form">
+  <app-input
+    inputId="task-title"
+    label="Task title"
+    placeholder="Close sprint plan"
+    type="text"
+    formControlName="title"
+  />
 
-  <label>
-    Description
-    <textarea formControlName="description" rows="3" placeholder="Add the tiny context future-you will need"></textarea>
-  </label>
+  <app-input
+    inputId="task-description"
+    label="Description"
+    placeholder="Add the tiny context future-you will need"
+    [multiline]="true"
+    [rows]="3"
+    formControlName="description"
+  />
 
   <div class="task-form__row">
-    <label>
-      Priority
-      <select formControlName="priority">
-        <option value="LOW">Low</option>
-        <option value="MEDIUM">Medium</option>
-        <option value="HIGH">High</option>
-      </select>
-    </label>
+    <app-select
+      label="Priority"
+      selectId="task-priority"
+      [options]="priorityOptions"
+      formControlName="priority"
+    />
 
-    <label>
-      Due date
-      <input type="datetime-local" formControlName="dueDate" />
-    </label>
+    <app-input
+      inputId="task-due-date"
+      label="Due date"
+      type="datetime-local"
+      formControlName="dueDate"
+    />
   </div>
 
-  <app-button type="submit" [disabled]="form.invalid">Add task</app-button>
+  @if (showActions) {
+    <app-button type="submit" [disabled]="form.invalid">Add task</app-button>
+  }
 </form>
-

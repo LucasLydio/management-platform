@@ -6,11 +6,12 @@ import { Router, RouterLink } from "@angular/router";
 
 import { AuthService } from "../../../core/services/auth.service";
 import { AppButtonComponent } from "../../../shared/ui/button/app-button.component";
+import { AppInputComponent } from "../../../shared/ui/input/app-input.component";
 
 @Component({
   selector: "app-register",
   standalone: true,
-  imports: [AppButtonComponent, NgIf, ReactiveFormsModule, RouterLink],
+  imports: [AppButtonComponent, AppInputComponent, NgIf, ReactiveFormsModule, RouterLink],
   templateUrl: "./register.component.html",
   styleUrl: "../auth.scss",
 })
@@ -43,4 +44,3 @@ export class RegisterComponent {
     });
   }
 }
-

@@ -1,0 +1,26 @@
+.due-box {
+  border: 2px solid #0ea5e9;
+  border-radius: 0.45rem;
+  height: 2rem;
+  opacity: 0;
+  padding: 0.2rem;
+  transform: rotate(-6deg) translateY(0.35rem);
+  transition:
+    opacity 0.45s var(--ease-premium),
+    transform 0.65s var(--ease-soft);
+  width: 2rem;
+  will-change: transform, opacity;
+}
+
+.due-box span {
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  border-radius: 0.25rem;
+  display: block;
+  height: 100%;
+}
+
+[data-animate="true"] .due-box,
+.due-box[data-animate="true"] {
+  opacity: 1;
+  transform: rotate(0deg) translateY(0);
+}

@@ -1,3 +1,6 @@
+@use "../app/shared/styles/motion";
+@use "../app/shared/styles/animation-stage";
+
 @import "bootstrap/dist/css/bootstrap.min.css";
 
 :root {
@@ -21,6 +24,34 @@ body {
   color: #0f172a;
   margin: 0;
   min-height: 100vh;
+  font-family: "Cause", cursive;
+  font-optical-sizing: auto;
+  font-style: normal;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+    border: 2px solid #f1f1f1; 
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+body.is-task-modal-open {
+  overflow: hidden;
 }
 
 [data-theme="dark"] body {
@@ -34,4 +65,3 @@ a {
   color: #4f46e5;
   font-weight: 700;
 }
-

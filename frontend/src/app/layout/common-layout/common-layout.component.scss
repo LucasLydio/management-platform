@@ -1,11 +1,11 @@
 .shell-header {
   align-items: center;
-  backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(5px);
+  // background: rgba(255, 255, 255, 0.84);
   border-bottom: 1px solid rgba(148, 163, 184, 0.24);
   display: flex;
   justify-content: space-between;
-  padding: 1rem clamp(1rem, 5vw, 4rem);
+  padding: .5rem .2rem;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -14,6 +14,7 @@
 .brand,
 .shell-nav {
   align-items: center;
+  justify-content: center;
   display: flex;
   gap: 0.9rem;
 }
@@ -26,7 +27,7 @@
 
 .brand__mark {
   align-items: center;
-  background: #4f46e5;
+  background: #fff;
   border-radius: 0.8rem;
   color: #fff;
   display: inline-flex;
@@ -50,10 +51,6 @@
 }
 
 @media (max-width: 720px) {
-  .shell-header,
-  .shell-nav {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+
 }
 

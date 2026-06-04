@@ -1,13 +1,22 @@
 <header class="shell-header">
   <a class="brand" routerLink="/">
-    <span class="brand__mark">M</span>
-    <span>Management Tasks</span>
+    <span>
+      
+    </span>
   </a>
 
   <nav class="shell-nav" *ngIf="authService.currentUser() as user">
-    <span>{{ user.name || user.email }}</span>
-    <app-button variant="ghost" (click)="themeService.toggle()">Theme</app-button>
-    <app-button variant="ghost" (click)="authService.logout()">Logout</app-button>
+    <span>Hello, {{ user.name }}</span>
+    <app-button variant="primary" (click)="themeService.toggle()">
+      @if (themeService.theme() === 'dark') {
+        <i class="bi bi-sun"></i>
+      } @else {
+        <i class="bi bi-moon"></i>
+      }
+    </app-button>
+    <app-button variant="primary" (click)="authService.logout()">
+      <i class="bi bi-box-arrow-in-right"></i>
+    </app-button>
   </nav>
 </header>
 

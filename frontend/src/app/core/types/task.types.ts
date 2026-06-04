@@ -1,4 +1,4 @@
-export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
+export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE" | "ARCHIVED";
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
 
 export type Task = {
@@ -23,4 +23,3 @@ export type TaskInput = {
 export type TaskUpdate = Partial<TaskInput> & {
   status?: TaskStatus;
 };
-

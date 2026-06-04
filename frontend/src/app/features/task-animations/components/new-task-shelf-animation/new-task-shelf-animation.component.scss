@@ -1,0 +1,37 @@
+.mini-animation {
+  align-items: end;
+  display: flex;
+  gap: 0.18rem;
+  height: 2rem;
+}
+
+.mini-animation span {
+  background: linear-gradient(180deg, #6366f1, #06b6d4);
+  border-radius: 0.25rem;
+  height: calc(0.7rem + var(--motion-index) * 0.3rem);
+  opacity: 0;
+  transform: translateY(0.55rem);
+  transition:
+    opacity 0.45s var(--ease-premium),
+    transform 0.55s var(--ease-spring);
+  width: 0.48rem;
+  will-change: transform, opacity;
+}
+
+.mini-animation span:nth-child(1) {
+  --motion-index: 1;
+}
+
+.mini-animation span:nth-child(2) {
+  --motion-index: 2;
+}
+
+.mini-animation span:nth-child(3) {
+  --motion-index: 3;
+}
+
+[data-animate="true"] .mini-animation span,
+.mini-animation[data-animate="true"] span {
+  opacity: 1;
+  transform: translateY(0);
+}

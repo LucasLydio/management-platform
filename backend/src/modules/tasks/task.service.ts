@@ -19,6 +19,10 @@ type TaskListResponse = {
   meta: ReturnType<typeof createPaginationMeta>;
 };
 
+type TaskListAllResponse = {
+  data: Awaited<ReturnType<TaskRepository["listAll"]>>;
+};
+
 export class TaskService {
   async list(input: {
     actor: Actor;
@@ -47,6 +51,29 @@ export class TaskService {
       data: items,
       meta: createPaginationMeta(total, input.page, input.limit),
     };
+
+    await cacheStore.set(cacheKey, response, 30);
+    return response;
+  }
+
+  async listAll(input: {
+    actor: Actor;
+    search?: string;
+    status?: TaskStatus;
+  }) {
+    const cacheKey = `tasks:all:${input.actor.id}:${input.actor.role}:${input.status ?? "all"}:${
+      input.search ?? ""
+    }`;
+    const cached = await cacheStore.get<TaskListAllResponse>(cacheKey);
+    if (cached) return cached;
+
+    const tasks = await taskRepository.listAll({
+      ownerId: input.actor.id,
+      role: input.actor.role,
+      search: input.search,
+      status: input.status,
+    });
+    const response: TaskListAllResponse = { data: tasks };
 
     await cacheStore.set(cacheKey, response, 30);
     return response;

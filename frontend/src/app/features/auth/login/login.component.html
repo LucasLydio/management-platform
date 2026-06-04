@@ -5,15 +5,21 @@
     <p class="muted">Use the seeded admin account after running the backend seed.</p>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
-      <label>
-        E-mail
-        <input type="email" formControlName="email" />
-      </label>
+      <app-input
+        autocomplete="email"
+        inputId="login-email"
+        label="E-mail"
+        type="email"
+        formControlName="email"
+      />
 
-      <label>
-        Password
-        <input type="password" formControlName="password" />
-      </label>
+      <app-input
+        autocomplete="current-password"
+        inputId="login-password"
+        label="Password"
+        type="password"
+        formControlName="password"
+      />
 
       <p class="error" *ngIf="error()">{{ error() }}</p>
 
@@ -23,14 +29,17 @@
     </form>
 
     <div class="google-box">
-      <label>
-        Google ID token
-        <input type="text" [value]="googleToken()" (input)="googleToken.set($any($event.target).value)" />
-      </label>
+      <app-input
+        inputId="google-id-token"
+        label="Google ID token"
+        placeholder="Paste the Google ID token"
+        type="text"
+        [value]="googleToken()"
+        (valueChange)="googleToken.set($any($event))"
+      />
       <app-button variant="ghost" (click)="submitGoogle()">Continue with Google</app-button>
     </div>
 
     <a routerLink="/auth/register">Create an account</a>
   </div>
 </section>
-

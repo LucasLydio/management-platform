@@ -1,0 +1,184 @@
+<section class="task-notebook-demo">
+  <div class="task-notebook" data-animate="true" aria-label="Task notebook">
+    <div class="task-notebook__paper">
+      <div class="task-notebook__spiral" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="task-notebook__header">
+        <div>
+          <span class="task-notebook__title">Today</span>
+          <span class="task-notebook__subtitle">
+            {{ activeCount() }} active {{ activeCount() === 1 ? "task" : "tasks" }}
+          </span>
+        </div>
+      </div>
+    
+      <ng-container>
+        <form class="d-flex flex-column m-2 gap-2" 
+        [formGroup]="createForm" (ngSubmit)="createTask()"
+        *ngIf="this.creatingTask;"
+        >
+            <app-input
+            class="task-notebook__input task-notebook__input--title"
+            type="text"
+            placeholder="Write a task title"
+            formControlName="title"
+            label="Task Title"
+            />
+
+            <app-textarea
+            class="task-notebook__input task-notebook__input--description"
+            placeholder="Add a little context"
+            label="Task description"
+            formControlName="description"
+            ></app-textarea>
+
+            <div class="d-flex flex-column gap-2">
+                <app-select 
+                    class="task-notebook__select" 
+                    formControlName="priority" 
+                    label="Task priority"
+                    [options]="priorityOptions"
+                />
+
+                <app-input
+                    class="task-notebook__input"
+                    type="datetime-local"
+                    formControlName="dueDate"
+                    aria-label="Task due date"
+                    label="Task due date"
+                />
+                <div class="d-flex gap-4">
+                    <app-button class="task-notebook__submit" type="submit" [disabled]="savingCreate()">
+                        {{ savingCreate() ? "Saving..." : "Add task" }}
+                    </app-button>
+
+                    <app-button class="task-notebook__submit" type="button" (click)="toggle()">
+                        {{ !createTask ? "Closing" : "Close" }}
+                    </app-button>
+                </div>
+            </div>
+        </form>
+      </ng-container>
+
+      <p class="task-notebook__feedback task-notebook__feedback--error" *ngIf="createError()">
+        {{ createError() }}
+      </p>
+      <p class="task-notebook__feedback task-notebook__feedback--error" *ngIf="error()">
+        {{ error() }}
+      </p>
+      <p class="task-notebook__feedback" *ngIf="loading()">Loading tasks...</p>
+
+      <ul class="task-notebook__list" *ngIf="!loading() && hasTasks(); else emptyState">
+        <li
+          class="task-row"
+          *ngFor="let task of tasks(); trackBy: trackTask; let taskIndex = index"
+          [class.task-row--done]="task.status === 'DONE'"
+          [class.task-row--archived]="task.status === 'ARCHIVED'"
+          [style.--motion-index]="taskIndex"
+        >
+          <ng-container *ngIf="editingTaskId() !== task.id; else editState">
+            <button
+              class="task-row__box"
+              type="button"
+              [class.task-row__box--checked]="task.status === 'DONE'"
+              [attr.aria-label]="task.status === 'DONE' ? 'Mark task as todo' : 'Mark task as done'"
+              (click)="toggleTaskStatus(task)"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12.5L10 17L19 7" />
+              </svg>
+            </button>
+
+            <div class="task-column__content">
+              <div class="task-column__line">
+                <span class="task-row__title">{{ task.title }}, </span> 
+                <span class="task-row__meta">
+                    Status: {{ statusLabel(task.status) }}, 
+                    Priority: {{ priorityLabel(task.priority) }}
+                </span>
+              </div>
+
+              <p class="task-column__description" *ngIf="task.description">Details: {{ task.description }}</p>
+
+              <div class="task-row__footer">
+                <div class="task-row__actions">
+                    <app-button class="task-row__action btn btn-group" variant="ghost" type="button" (click)="startEdit(task)">
+                        <i class="bi bi-pencil-square">
+                            edit
+                        </i>
+                    </app-button>
+                    <app-button class="task-row__action" variant="ghost" type="button" (click)="archiveTask(task)">
+                        <i class="bi" [class.bi-box-arrow-up]="task.status === 'ARCHIVED'" [class.bi-archive]="task.status !== 'ARCHIVED'">
+                            archive
+                        </i>
+                    </app-button>
+                    <app-button
+                        class="task-row__action task-row__action--danger"
+                        variant="ghost"
+                        type="button"
+                        [disabled]="deletePendingId() === task.id"
+                        (click)="deleteTask(task.id)"
+                    >
+                        <i class="bi bi-trash"> Delete</i>
+                    </app-button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #editState>
+            <form class="task-row__edit" [formGroup]="editForm" (ngSubmit)="saveEdit(task.id)">
+              <input class="task-notebook__input task-notebook__input--title" type="text" formControlName="title" />
+
+              <textarea
+                class="task-notebook__input task-notebook__input--description"
+                rows="2"
+                formControlName="description"
+              ></textarea>
+
+              <div class="task-row__edit-grid">
+                <select class="task-notebook__select" formControlName="priority" aria-label="Edit priority">
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                </select>
+
+                <select class="task-notebook__select" formControlName="status" aria-label="Edit status">
+                  <option value="TODO">Todo</option>
+                  <option value="IN_PROGRESS">In progress</option>
+                  <option value="DONE">Done</option>
+                  <option value="ARCHIVED">Archived</option>
+                </select>
+
+                <input class="task-notebook__input" type="datetime-local" formControlName="dueDate" />
+              </div>
+
+              <div class="task-row__actions">
+                <button class="task-row__action" type="submit" [disabled]="savingEdit()">
+                  {{ savingEdit() ? "Saving..." : "Save" }}
+                </button>
+                <button class="task-row__action" type="button" (click)="cancelEdit()">Cancel</button>
+              </div>
+            </form>
+          </ng-template>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<ng-template #emptyState>
+  <div class="task-notebook__empty">
+    <span>No tasks yet.</span>
+    <small>Add your first one above and it will appear on the notebook lines.</small>
+  </div>
+</ng-template>

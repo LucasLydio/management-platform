@@ -1,52 +1,121 @@
-<section class="hero">
-  <div>
-    <p class="eyebrow">MVP ready</p>
-    <h1>Manage tasks with auth, pagination, cache, and real-time updates.</h1>
-    <p>Small enough to understand. Complete enough to deploy. A suspiciously good combo.</p>
-  </div>
-</section>
-
-<section class="dashboard">
-  <app-task-form (taskCreated)="createTask($event)" />
-
+<section class="">
   <div class="tasks-panel">
-    <form [formGroup]="filters" (ngSubmit)="applyFilters()" class="filters">
-      <input type="search" formControlName="search" placeholder="Search tasks" />
-      <select formControlName="status">
-        <option value="">All status</option>
-        <option value="TODO">Todo</option>
-        <option value="IN_PROGRESS">In progress</option>
-        <option value="DONE">Done</option>
-      </select>
-      <app-button type="submit">Filter</app-button>
-    </form>
 
     <p class="error" *ngIf="error()">{{ error() }}</p>
+    <div class="options">
+      <h4>Let's Start?!</h4>
+      <app-button (click)="createTaskForm.toggle()">
+        <p>New Task,</p>
+        <p>Click Here!</p>
+      </app-button>
+    </div>
+    <app-notebook></app-notebook>
 
     <ng-container *ngIf="tasks$ | async as response">
-      <div class="tasks-grid" *ngIf="response.data.length; else emptyState">
-        <app-task-card
-          *ngFor="let task of response.data"
-          [task]="task"
-          (deleteTask)="deleteTask($event)"
-          (statusChange)="updateStatus($event)"
-        />
+    </ng-container>
+
+    <!-- <ng-container *ngIf="tasks$ | async as response">
+      <div class="board" cdkDropListGroup *ngIf="response.data.length; else emptyState">
+        <section
+          class="task-column"
+          *ngFor="let column of columns; trackBy: trackColumn; let columnIndex = index"
+          [ngClass]="'task-column--' + column.status.toLowerCase()"
+          appRevealOnView
+          [style.--motion-index]="columnIndex"
+        >
+          <header class="task-column__header">
+            <div class="task-column__animation">
+              <app-new-task-shelf-animation *ngIf="column.status === 'TODO'" />
+              <app-due-box-animation *ngIf="column.status === 'IN_PROGRESS'" />
+              <app-task-notebook-animation *ngIf="column.status === 'DONE'" />
+              <span class="archive-column-icon" *ngIf="column.status === 'ARCHIVED'" aria-hidden="true">
+                <i class="bi bi-archive"></i>
+              </span>
+            </div>
+
+            <div>
+              <h4>{{ column.label }}</h4>
+              <p>{{ column.description }}</p>
+            </div>
+
+            <span class="task-column__count">{{ tasksByStatus(response.data, column.status).length }}</span>
+          </header>
+
+          <div
+            class="task-column__dropzone"
+            cdkDropList
+            [cdkDropListData]="column.status"
+            (cdkDropListDropped)="dropTask($event)"
+          >
+            <app-task-card
+              *ngFor="let task of tasksByStatus(response.data, column.status); trackBy: trackTask; let taskIndex = index"
+              cdkDrag
+              [cdkDragData]="task"
+              [task]="task"
+              [motionIndex]="taskIndex"
+              (deleteTask)="deleteTask($event)"
+              (statusChange)="updateStatus($event)"
+            />
+
+            <div class="column-empty" *ngIf="!tasksByStatus(response.data, column.status).length">
+              Drop tasks here
+            </div>
+          </div>
+        </section>
       </div>
 
-      <div class="pagination">
-        <app-button variant="ghost" [disabled]="!response.meta.hasPreviousPage" (click)="previousPage(response)">
-          Previous
-        </app-button>
-        <span>Page {{ response.meta.page }} of {{ response.meta.totalPages }}</span>
-        <app-button variant="ghost" [disabled]="!response.meta.hasNextPage" (click)="nextPage(response)">
-          Next
-        </app-button>
-      </div>
-    </ng-container>
+    </ng-container> -->
   </div>
 </section>
 
 <ng-template #emptyState>
-  <div class="empty-state">No tasks yet. Add one and give future-you a breadcrumb.</div>
+  <div class="empty-state" appRevealOnView>
+    <app-pending-alert-animation />
+    <strong>No tasks yet.</strong>
+    <span>Add one and give future-you a breadcrumb.</span>
+  </div>
 </ng-template>
 
+<ng-container *ngIf="isCreateTaskModalOpen()">
+  <div class="task-modal-backdrop" (click)="closeCreateTaskModal()"></div>
+
+  <section
+    class="task-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="createTaskModalTitle"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="task-modal__header">
+      <div>
+        <p class="eyebrow">Create task</p>
+        <h2 id="createTaskModalTitle">Add new task</h2>
+      </div>
+
+      <button type="button" class="btn-close" aria-label="Close modal" (click)="closeCreateTaskModal()"></button>
+    </header>
+
+    <div class="task-modal__body">
+      <p class="modal-hint">Capture the task now. Sort it later with drag and drop.</p>
+
+      <p class="error" *ngIf="createTaskError()">{{ createTaskError() }}</p>
+
+      <app-task-form
+        formId="create-task-form"
+        [showActions]="false"
+        (taskCreated)="createTask($event)"
+      />
+    </div>
+
+    <footer class="task-modal__footer">
+      <app-button variant="ghost" [disabled]="creatingTask()" (click)="closeCreateTaskModal()">Cancel</app-button>
+      <app-button
+        form="create-task-form"
+        type="submit"
+        [disabled]="isCreateSubmitDisabled()"
+      >
+        {{ creatingTask() ? "Creating..." : "Create task" }}
+      </app-button>
+    </footer>
+  </section>
+</ng-container>

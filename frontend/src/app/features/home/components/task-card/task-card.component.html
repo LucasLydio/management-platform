@@ -1,19 +1,37 @@
-<article class="task-card" [ngClass]="'task-card--' + task.priority.toLowerCase()">
+<article
+  class="task-card"
+  appRevealOnView
+  [ngClass]="['task-card--' + task.priority.toLowerCase(), 'task-card--' + visualState(task)]"
+  [style.--motion-index]="motionIndex"
+>
+  <div class="task-card__reflection" aria-hidden="true"></div>
+
   <div class="task-card__top">
-    <span class="pill">{{ task.status.replace("_", " ") }}</span>
-    <span class="priority">{{ task.priority }}</span>
+    <h6>{{ task.title }}</h6>
+
+    <p *ngIf="task.description">{{ task.description }}</p>
+    
+    <span class="task-due" *ngIf="task.dueDate" [class.is-due]="isDue(task)">
+      <i class="bi" [ngClass]="isDue(task) ? 'bi-alarm-fill' : 'bi-calendar3'" aria-hidden="true"></i>
+      {{ task.dueDate | date: "mediumDate" }}
+    </span>
   </div>
 
-  <h3>{{ task.title }}</h3>
-  <p *ngIf="task.description">{{ task.description }}</p>
-
-  <small *ngIf="task.dueDate">Due {{ task.dueDate | date: "medium" }}</small>
-
-  <div class="task-card__actions">
-    <app-button variant="ghost" (click)="statusChange.emit({ id: task.id, status: nextStatus(task.status) })">
-      Move to {{ nextStatus(task.status).replace("_", " ") }}
-    </app-button>
-    <app-button variant="ghost" (click)="deleteTask.emit(task.id)">Delete</app-button>
+  <footer class="task-card__actions" aria-label="Task actions">
+    <button
+      type="button"
+      class="icon-action icon-action--move"
+      [attr.aria-label]="actionLabel(task.status)"
+      [attr.data-tooltip]="actionLabel(task.status)"
+      [attr.title]="actionLabel(task.status)"
+      (click)="statusChange.emit({ id: task.id, status: nextStatus(task.status) })"
+    >
+      <span>Open Task</span>
+    </button>
+  </footer>
+  <div class="task-progress" aria-hidden="true">
+    <span [class.is-active]="task.status === 'TODO' || task.status === 'IN_PROGRESS' || task.status === 'DONE'"></span>
+    <span [class.is-active]="task.status === 'IN_PROGRESS' || task.status === 'DONE'"></span>
+    <span [class.is-active]="task.status === 'DONE'"></span>
   </div>
 </article>
-

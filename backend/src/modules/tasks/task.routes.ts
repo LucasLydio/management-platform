@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { requireAuth } from "../../core/http/middlewares/require-auth";
 import { parsePagination } from "../../utils/pagination";
-import { createTaskSchema, listTasksSchema, taskIdSchema, updateTaskSchema } from "./task.schemas";
+import { createTaskSchema, listAllTasksSchema, listTasksSchema, taskIdSchema, updateTaskSchema } from "./task.schemas";
 import { TaskService } from "./task.service";
 
 const taskService = new TaskService();
@@ -10,6 +10,21 @@ const taskService = new TaskService();
 export const taskRoutes = Router();
 
 taskRoutes.use(requireAuth);
+
+taskRoutes.get("/all", async (request, response, next) => {
+  try {
+    const { query } = listAllTasksSchema.parse(request);
+    const result = await taskService.listAll({
+      actor: request.user!,
+      search: query.search,
+      status: query.status,
+    });
+
+    response.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 taskRoutes.get("/", async (request, response, next) => {
   try {
@@ -59,4 +74,3 @@ taskRoutes.delete("/:id", async (request, response, next) => {
     next(error);
   }
 });
-
