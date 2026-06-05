@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable, inject } from "@angular/core";
+import { effect, Injectable, inject, signal } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { io, type Socket } from "socket.io-client";
 
@@ -13,9 +13,30 @@ export class TaskService {
   private readonly authService = inject(AuthService);
   private readonly http = inject(HttpClient);
   private readonly taskChangedSubject = new Subject<Task | { deleted: true; id: string }>();
+  private readonly realtimeBlocked = signal(false);
+  private socketToken: string | null = null;
   private socket?: Socket;
 
   readonly taskChanged$ = this.taskChangedSubject.asObservable();
+
+  constructor() {
+    effect(() => {
+      const token = this.authService.token();
+
+      if (!token) {
+        this.realtimeBlocked.set(false);
+        this.socketToken = null;
+        this.destroySocket();
+        return;
+      }
+
+      if (this.socketToken && this.socketToken !== token) {
+        this.realtimeBlocked.set(false);
+        this.socketToken = null;
+        this.destroySocket();
+      }
+    });
+  }
 
   list(filters: {
     limit?: number;
@@ -58,18 +79,39 @@ export class TaskService {
   }
 
   connectRealtime(): void {
-    if (this.socket?.connected) return;
-
     const token = this.authService.token();
-    if (!token) return;
+    if (!token || this.realtimeBlocked()) return;
+    if (this.socket) return;
 
     this.socket = io(environment.socketUrl, {
       auth: { token },
+      reconnection: true,
       transports: ["websocket"],
     });
+    this.socketToken = token;
 
     this.socket.on("task.changed", (task: Task | { deleted: true; id: string }) => {
       this.taskChangedSubject.next(task);
     });
+
+    this.socket.on("connect_error", (error) => {
+      if (!this.isUnauthorizedSocketError(error)) return;
+
+      this.realtimeBlocked.set(true);
+      if (this.socket) this.socket.io.opts.reconnection = false;
+      this.destroySocket();
+    });
+  }
+
+  private destroySocket(): void {
+    if (!this.socket) return;
+
+    this.socket.removeAllListeners();
+    this.socket.disconnect();
+    this.socket = undefined;
+  }
+
+  private isUnauthorizedSocketError(error: Error): boolean {
+    return error.message.toLowerCase().includes("unauthorized");
   }
 }
