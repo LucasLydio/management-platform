@@ -20,12 +20,19 @@ const envSchema = z
     DB_PASSWORD: z.string().default("postgres"),
     DB_PORT: z.coerce.number().default(5432),
     DB_USERNAME: z.string().default("postgres"),
+    FRONTEND_APP_URL: z.string().default("http://localhost:8080"),
+    GOOGLE_CALENDAR_AUTH_URL: z.string().optional().default(""),
     GOOGLE_CLIENT_ID: z.string().optional().default(""),
+    GOOGLE_DRIVE_AUTH_URL: z.string().optional().default(""),
+    INTEGRATION_STATE_SECRET: z.string().optional().default(""),
     JWT_ACCESS_EXPIRES_IN: z.string().default("45m"),
     JWT_ACCESS_SECRET: z.string().min(24),
     JWT_REFRESH_EXPIRES_IN: z.string().default("30d"),
     JWT_REFRESH_SECRET: z.string().min(24),
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    NOTION_CLIENT_ID: z.string().optional().default(""),
+    NOTION_CLIENT_SECRET: z.string().optional().default(""),
+    NOTION_REDIRECT_URI: z.string().optional().default(""),
     PORT: z.coerce.number().default(3333),
     REDIS_URL: z.string().optional().default(""),
   })
@@ -43,4 +50,3 @@ const envSchema = z
   });
 
 export const env = envSchema.parse(process.env);
-

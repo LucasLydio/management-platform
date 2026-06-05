@@ -4,16 +4,10 @@ import { cacheStore } from "../../core/cache/cache-store";
 import { AppError } from "../../core/http/errors";
 import { realtimeEvents } from "../../core/realtime/events";
 import { createPaginationMeta } from "../../utils/pagination";
+import { canAccessTask, type TaskActor } from "./task.permissions";
 import { TaskRepository } from "./task.repository";
 
-type Actor = {
-  id: string;
-  role: "ADMIN" | "COMMON";
-};
-
 const taskRepository = new TaskRepository();
-
-const isAllowed = (actor: Actor, ownerId: string) => actor.role === "ADMIN" || actor.id === ownerId;
 type TaskListResponse = {
   data: Awaited<ReturnType<TaskRepository["list"]>>["items"];
   meta: ReturnType<typeof createPaginationMeta>;
@@ -25,7 +19,7 @@ type TaskListAllResponse = {
 
 export class TaskService {
   async list(input: {
-    actor: Actor;
+    actor: TaskActor;
     limit: number;
     page: number;
     search?: string;
@@ -57,7 +51,7 @@ export class TaskService {
   }
 
   async listAll(input: {
-    actor: Actor;
+    actor: TaskActor;
     search?: string;
     status?: TaskStatus;
   }) {
@@ -80,7 +74,7 @@ export class TaskService {
   }
 
   async create(input: {
-    actor: Actor;
+    actor: TaskActor;
     description?: string | null;
     dueDate?: string | null;
     priority: TaskPriority;
@@ -101,7 +95,7 @@ export class TaskService {
 
   async update(
     id: string,
-    actor: Actor,
+    actor: TaskActor,
     input: {
       description?: string | null;
       dueDate?: string | null;
@@ -112,7 +106,7 @@ export class TaskService {
   ) {
     const task = await taskRepository.findById(id);
     if (!task) throw new AppError("Task not found", 404);
-    if (!isAllowed(actor, task.ownerId)) throw new AppError("Forbidden", 403);
+    if (!canAccessTask(actor, task.ownerId)) throw new AppError("Forbidden", 403);
 
     const updatedTask = await taskRepository.update(id, {
       description: input.description,
@@ -127,10 +121,10 @@ export class TaskService {
     return updatedTask;
   }
 
-  async delete(id: string, actor: Actor) {
+  async delete(id: string, actor: TaskActor) {
     const task = await taskRepository.findById(id);
     if (!task) throw new AppError("Task not found", 404);
-    if (!isAllowed(actor, task.ownerId)) throw new AppError("Forbidden", 403);
+    if (!canAccessTask(actor, task.ownerId)) throw new AppError("Forbidden", 403);
 
     await taskRepository.delete(id);
     await cacheStore.deleteByPrefix("tasks:");

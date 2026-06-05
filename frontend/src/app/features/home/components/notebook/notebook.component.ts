@@ -1,5 +1,5 @@
-import { NgClass, NgFor, NgIf, NgIfContext } from "@angular/common";
-import { Component, DestroyRef, Injectable, OnInit, TemplateRef, computed, inject, signal } from "@angular/core";
+import { NgFor, NgIf } from "@angular/common";
+import { Component, DestroyRef, OnInit, computed, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 
@@ -17,14 +17,10 @@ type NotebookFormValue = {
   title: string;
 };
 
-@Injectable({
-  providedIn: 'root' // Makes it accessible anywhere in the app
-})
-
 @Component({
   selector: "app-notebook",
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, ReactiveFormsModule, AppButtonComponent, AppInputComponent, AppSelectComponent, AppTextareaComponent],
+  imports: [NgFor, NgIf, ReactiveFormsModule, AppButtonComponent, AppInputComponent, AppSelectComponent, AppTextareaComponent],
   templateUrl: "./notebook.component.html",
   styleUrl: "./notebook.component.css",
 })
@@ -40,6 +36,8 @@ export class NotebookComponent implements OnInit {
   readonly loading = signal(true);
   readonly savingCreate = signal(false);
   readonly savingEdit = signal(false);
+  readonly selectedTaskId = signal<string | null>(null);
+  readonly selectedTask = computed(() => this.tasks().find((task) => task.id === this.selectedTaskId()) ?? null);
   readonly tasks = signal<Task[]>([]);
 
   readonly createForm = this.formBuilder.nonNullable.group({
@@ -59,19 +57,16 @@ export class NotebookComponent implements OnInit {
 
   readonly activeCount = computed(() => this.tasks().filter((task) => task.status !== "ARCHIVED").length);
   readonly hasTasks = computed(() => this.tasks().length > 0);
-  emptyState!: TemplateRef<NgIfContext<boolean>> | null;
-  editRow!: TemplateRef<NgIfContext<boolean>> | null;
-  creatingTask: boolean = false;
-  
+  creatingTask = signal(false);
+
   readonly priorityOptions: AppSelectOption[] = [
-    { value: 'LOW', label: 'Low' },
-    { value: 'MEDIUM', label: 'Medium' },
-    { value: 'HIGH', label: 'High' }
+    { value: "LOW", label: "Low" },
+    { value: "MEDIUM", label: "Medium" },
+    { value: "HIGH", label: "High" },
   ];
 
-  toggle() {
-    this.creatingTask = !this.creatingTask;
-  }
+  open(): void { this.creatingTask.set(true); }
+  toggle(): void { this.creatingTask.update((state) => !state); }
 
   ngOnInit(): void {
     this.loadTasks();
@@ -104,6 +99,7 @@ export class NotebookComponent implements OnInit {
   }
 
   startEdit(task: Task): void {
+    this.selectTask(task);
     this.error.set("");
     this.editingTaskId.set(task.id);
     this.editForm.reset({
@@ -143,11 +139,13 @@ export class NotebookComponent implements OnInit {
   }
 
   toggleTaskStatus(task: Task): void {
+    this.selectTask(task);
     const nextStatus: TaskStatus = task.status === "DONE" ? "TODO" : "DONE";
     this.updateTask(task.id, { status: nextStatus }, "Could not update task");
   }
 
   archiveTask(task: Task): void {
+    this.selectTask(task);
     const nextStatus: TaskStatus = task.status === "ARCHIVED" ? "TODO" : "ARCHIVED";
     this.updateTask(task.id, { status: nextStatus }, "Could not archive task");
   }
@@ -173,6 +171,9 @@ export class NotebookComponent implements OnInit {
     return task.id;
   }
 
+  selectTask(task: Task): void {
+    this.selectedTaskId.set(task.id);
+  }
   priorityLabel(priority: TaskPriority): string {
     return priority.toLowerCase();
   }
@@ -212,7 +213,9 @@ export class NotebookComponent implements OnInit {
       next: (response) => {
         this.loading.set(false);
         this.error.set("");
-        this.tasks.set(this.sortTasks(response.data));
+        const tasks = this.sortTasks(response.data);
+        this.tasks.set(tasks);
+        this.syncSelectedTask(tasks);
       },
     });
   }
@@ -286,5 +289,12 @@ export class NotebookComponent implements OnInit {
     const offset = date.getTimezoneOffset();
     const localDate = new Date(date.getTime() - offset * 60_000);
     return localDate.toISOString().slice(0, 16);
+  }
+
+  private syncSelectedTask(tasks: Task[]): void {
+    const selectedTaskId = this.selectedTaskId();
+    if (selectedTaskId && tasks.some((task) => task.id === selectedTaskId)) return;
+    const nextTask = tasks.find((task) => task.status !== "ARCHIVED") ?? tasks[0] ?? null;
+    this.selectedTaskId.set(nextTask?.id ?? null);
   }
 }

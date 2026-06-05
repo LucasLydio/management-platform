@@ -20,54 +20,51 @@
           </span>
         </div>
       </div>
-    
-      <ng-container>
-        <form class="d-flex flex-column m-2 gap-2" 
-        [formGroup]="createForm" (ngSubmit)="createTask()"
-        *ngIf="this.creatingTask;"
-        >
-            <app-input
+      @if (creatingTask()) {
+        <form class="task-notebook__form" [formGroup]="createForm" (ngSubmit)="createTask()">
+          <app-input
             class="task-notebook__input task-notebook__input--title"
             type="text"
             placeholder="Write a task title"
             formControlName="title"
             label="Task Title"
-            />
+          />
 
-            <app-textarea
+          <app-textarea
             class="task-notebook__input task-notebook__input--description"
             placeholder="Add a little context"
             label="Task description"
             formControlName="description"
-            ></app-textarea>
+          ></app-textarea>
 
-            <div class="d-flex flex-column gap-2">
-                <app-select 
-                    class="task-notebook__select" 
-                    formControlName="priority" 
-                    label="Task priority"
-                    [options]="priorityOptions"
-                />
+          <div class="task-notebook__form-grid">
+            <app-select
+              class="task-notebook__select"
+              formControlName="priority"
+              label="Task priority"
+              [options]="priorityOptions"
+            />
 
-                <app-input
-                    class="task-notebook__input"
-                    type="datetime-local"
-                    formControlName="dueDate"
-                    aria-label="Task due date"
-                    label="Task due date"
-                />
-                <div class="d-flex gap-4">
-                    <app-button class="task-notebook__submit" type="submit" [disabled]="savingCreate()">
-                        {{ savingCreate() ? "Saving..." : "Add task" }}
-                    </app-button>
+            <app-input
+              class="task-notebook__input"
+              type="datetime-local"
+              formControlName="dueDate"
+              aria-label="Task due date"
+              label="Task due date"
+            />
+          </div>
 
-                    <app-button class="task-notebook__submit" type="button" (click)="toggle()">
-                        {{ !createTask ? "Closing" : "Close" }}
-                    </app-button>
-                </div>
-            </div>
+          <div class="task-notebook__actions">
+            <app-button class="task-notebook__submit" type="submit" [disabled]="savingCreate()">
+              {{ savingCreate() ? "Saving..." : "Add task" }}
+            </app-button>
+
+            <app-button class="task-notebook__submit" type="button" variant="ghost" (click)="toggle()">
+              Close
+            </app-button>
+          </div>
         </form>
-      </ng-container>
+      }
 
       <p class="task-notebook__feedback task-notebook__feedback--error" *ngIf="createError()">
         {{ createError() }}
@@ -99,17 +96,30 @@
             </button>
 
             <div class="task-column__content">
-              <div class="task-column__line">
-                <span class="task-row__title">{{ task.title }}, </span> 
-                <span class="task-row__meta">
-                    Status: {{ statusLabel(task.status) }}, 
-                    Priority: {{ priorityLabel(task.priority) }}
-                </span>
+              <div
+                class="task-column__details"
+                [class.task-column__details--selected]="selectedTaskId() === task.id"
+                role="button"
+                tabindex="0"
+                [attr.aria-label]="'Select task ' + task.title + ' for integrations'"
+                [attr.aria-pressed]="selectedTaskId() === task.id"
+                (click)="selectTask(task)"
+                (keydown.enter)="selectTask(task)"
+                (keydown.space)="selectTask(task); $event.preventDefault()"
+              >
+                <div class="task-column__line">
+                  <span class="task-row__title">{{ task.title }}, </span> 
+                  <span class="task-row__meta">
+                      Status: {{ statusLabel(task.status) }}, 
+                      Priority: {{ priorityLabel(task.priority) }}
+                  </span>
+                </div>
+
+                <p class="task-column__description" *ngIf="task.description">Details: {{ task.description }}</p>
               </div>
 
-              <p class="task-column__description" *ngIf="task.description">Details: {{ task.description }}</p>
-
               <div class="task-row__footer">
+                <span class="task-row__selection" *ngIf="selectedTaskId() === task.id">Selected for integrations</span>
                 <div class="task-row__actions">
                     <app-button class="task-row__action btn btn-group" variant="ghost" type="button" (click)="startEdit(task)">
                         <i class="bi bi-pencil-square">
@@ -137,36 +147,35 @@
 
           <ng-template #editState>
             <form class="task-row__edit" [formGroup]="editForm" (ngSubmit)="saveEdit(task.id)">
-              <input class="task-notebook__input task-notebook__input--title" type="text" formControlName="title" />
+              <app-input class="task-notebook__input task-notebook__input--title" type="text" formControlName="title" />
 
-              <textarea
+              <app-textarea
                 class="task-notebook__input task-notebook__input--description"
-                rows="2"
                 formControlName="description"
-              ></textarea>
+              ></app-textarea>
 
               <div class="task-row__edit-grid">
-                <select class="task-notebook__select" formControlName="priority" aria-label="Edit priority">
+                <app-select class="task-notebook__select" formControlName="priority" aria-label="Edit priority">
                   <option value="LOW">Low</option>
                   <option value="MEDIUM">Medium</option>
                   <option value="HIGH">High</option>
-                </select>
+                </app-select>
 
-                <select class="task-notebook__select" formControlName="status" aria-label="Edit status">
+                <app-select class="task-notebook__select" formControlName="status" aria-label="Edit status">
                   <option value="TODO">Todo</option>
                   <option value="IN_PROGRESS">In progress</option>
                   <option value="DONE">Done</option>
                   <option value="ARCHIVED">Archived</option>
-                </select>
+                </app-select>
 
-                <input class="task-notebook__input" type="datetime-local" formControlName="dueDate" />
+                <app-input class="task-notebook__input" type="datetime-local" formControlName="dueDate" />
               </div>
 
               <div class="task-row__actions">
-                <button class="task-row__action" type="submit" [disabled]="savingEdit()">
+                <app-button class="task-row__action" type="submit" [disabled]="savingEdit()">
                   {{ savingEdit() ? "Saving..." : "Save" }}
-                </button>
-                <button class="task-row__action" type="button" (click)="cancelEdit()">Cancel</button>
+                </app-button>
+                <app-button class="task-row__action" type="button" (click)="cancelEdit()">Cancel</app-button>
               </div>
             </form>
           </ng-template>

@@ -1,0 +1,85 @@
+:host {
+  display: block;
+}
+
+.auth-google {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.auth-google__surface {
+  align-items: center;
+  background: rgba(248, 250, 252, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  border-radius: 1.2rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.8fr);
+  padding: 1rem 1.1rem;
+}
+
+.auth-google__copy strong {
+  color: #0f172a;
+  display: block;
+  font: 700 0.98rem/1.2 "Iosevka Charon", ui-monospace, monospace;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.auth-google__copy p,
+.auth-google__status {
+  color: #64748b;
+  font: 500 0.92rem/1.5 system-ui, sans-serif;
+  margin: 0;
+}
+
+.auth-google__action {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.auth-google__button {
+  min-height: 44px;
+  width: 100%;
+}
+
+.auth-google__button--busy {
+  opacity: 0.7;
+}
+
+.auth-google__fallback {
+  background: #e2e8f0;
+  border: 0;
+  border-radius: 999px;
+  color: #475569;
+  cursor: not-allowed;
+  font: 700 0.95rem/1 system-ui, sans-serif;
+  min-height: 3rem;
+  padding: 0 1rem;
+}
+
+.auth-google__error {
+  color: #b91c1c;
+  font: 700 0.9rem/1.4 system-ui, sans-serif;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .auth-google__surface {
+    grid-template-columns: 1fr;
+  }
+}
+
+[data-theme="dark"] .auth-google__surface {
+  background: rgba(15, 23, 42, 0.74);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+[data-theme="dark"] .auth-google__copy strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .auth-google__copy p,
+[data-theme="dark"] .auth-google__status {
+  color: #94a3b8;
+}

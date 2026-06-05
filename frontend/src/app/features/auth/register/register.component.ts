@@ -2,16 +2,23 @@ import { NgIf } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Router, RouterLink } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 
 import { AuthService } from "../../../core/services/auth.service";
-import { AppButtonComponent } from "../../../shared/ui/button/app-button.component";
 import { AppInputComponent } from "../../../shared/ui/input/app-input.component";
+import { GoogleSigninComponent } from "../components/google-signin/google-signin.component";
 
 @Component({
   selector: "app-register",
   standalone: true,
-  imports: [AppButtonComponent, AppInputComponent, NgIf, ReactiveFormsModule, RouterLink],
+  imports: [
+    AppInputComponent,
+    GoogleSigninComponent,
+    NgIf,
+    ReactiveFormsModule,
+    RouterLink,
+    RouterLinkActive,
+  ],
   templateUrl: "./register.component.html",
   styleUrl: "../auth.scss",
 })

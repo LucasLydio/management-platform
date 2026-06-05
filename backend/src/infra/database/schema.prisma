@@ -37,6 +37,7 @@ model User {
   role            Role         @default(COMMON)
   authProvider    AuthProvider @default(LOCAL)
   googleId        String?      @unique
+  notionConnection NotionConnection?
   tokenVersion    Int          @default(0)
   tasks           Task[]
   createdAt       DateTime     @default(now())
@@ -59,4 +60,24 @@ model Task {
 
   @@index([ownerId, status])
   @@map("tasks")
+}
+
+model NotionConnection {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  botId                String   @unique
+  accessToken          String
+  refreshToken         String
+  duplicatedTemplateId String?
+  ownerUserEmail       String?
+  ownerUserId          String?
+  ownerUserName        String?
+  workspaceIcon        String?
+  workspaceId          String
+  workspaceName        String?
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@map("notion_connections")
 }

@@ -1,0 +1,61 @@
+<div class="integration-options" [class.integration-options--disabled]="isUnavailable()">
+  <div class="integration-options__header">
+    <span class="integration-options__title">Connect Task:</span>
+    @if (!taskId()) {
+      <span class="integration-options__hint">Select a task in the notebook first.</span>
+    }
+  </div>
+
+  <div class="integration-options__actions" [attr.aria-busy]="loadingProvider() !== null">
+    <app-button
+      variant="ghost"
+      type="button"
+      title="Connect to Google Calendar"
+      aria-label="Connect to Google Calendar"
+      [disabled]="isUnavailable() || loadingProvider() !== null"
+      (click)="connect('google-calendar')"
+    >
+      <img src="/assets/icons/google-calendar.svg" alt="Google Calendar" class="integration-icon" />
+    </app-button>
+
+    <app-button
+      variant="ghost"
+      type="button"
+      title="Send to Notion Workspace"
+      aria-label="Send to Notion Workspace"
+      [disabled]="isUnavailable() || loadingProvider() !== null"
+      (click)="connect('notion')"
+    >
+      <img src="/assets/icons/notion.svg" alt="Notion" class="integration-icon" />
+    </app-button>
+
+    <app-button
+      variant="ghost"
+      type="button"
+      title="Attach Google Drive File"
+      aria-label="Attach Google Drive File"
+      [disabled]="isUnavailable() || loadingProvider() !== null"
+      (click)="connect('google-drive')"
+    >
+      <img src="/assets/icons/google-drive-2.svg" alt="Google Drive" class="integration-icon" />
+    </app-button>
+  </div>
+</div>
+
+@if (loadingProvider(); as provider) {
+  <p class="integration-options__feedback integration-options__feedback--info" aria-live="polite">
+    Connecting task to {{ providerLabel(provider) }}...
+  </p>
+}
+
+@if (feedback(); as message) {
+  <p
+    class="integration-options__feedback"
+    [class.integration-options__feedback--error]="message.tone === 'error'"
+    [class.integration-options__feedback--info]="message.tone === 'info'"
+    [class.integration-options__feedback--success]="message.tone === 'success'"
+    aria-live="polite"
+  >
+    {{ message.text }}
+  </p>
+}

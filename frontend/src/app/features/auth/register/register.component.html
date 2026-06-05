@@ -1,41 +1,103 @@
-<section class="auth-page">
-  <div class="auth-card">
-    <p class="eyebrow">New here?</p>
-    <h1>Create your management workspace.</h1>
-    <p class="muted">Small, useful, and not allergic to deadlines.</p>
+<section class="auth-shell auth-shell--register">
+  <div class="auth-layout">
+    <aside class="auth-showcase">
+      <a routerLink="/auth/login" class="auth-brand">Management Tasks</a>
+      <p class="auth-kicker">Enterprise-ready onboarding</p>
+      <h1>Create a workspace your team can trust from day one.</h1>
+      <p class="auth-lead">
+        Launch with secure access, real-time visibility, and a workflow surface built for operators, not demos.
+      </p>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
-      <app-input
-        autocomplete="name"
-        inputId="register-name"
-        label="Name"
-        type="text"
-        formControlName="name"
-      />
+      <div class="auth-highlights">
+        <article class="auth-highlight-card">
+          <span>01</span>
+          <strong>Fast client onboarding</strong>
+          <p>Teams can start with email registration or a verified Google account in the same flow.</p>
+        </article>
+        <article class="auth-highlight-card">
+          <span>02</span>
+          <strong>Built for handoff</strong>
+          <p>Clear task ownership, responsive routing, and structured status boards help work move quickly.</p>
+        </article>
+      </div>
 
-      <app-input
-        autocomplete="email"
-        inputId="register-email"
-        label="E-mail"
-        type="email"
-        formControlName="email"
-      />
+      <ul class="auth-proof">
+        <li><i class="bi bi-person-check"></i> Verified identity flow for clients and internal operators</li>
+        <li><i class="bi bi-lightning-charge"></i> Immediate access to real-time task updates after sign-up</li>
+        <li><i class="bi bi-kanban"></i> Consistent onboarding experience across desktop and mobile</li>
+      </ul>
+    </aside>
 
-      <app-input
-        autocomplete="new-password"
-        inputId="register-password"
-        label="Password"
-        type="password"
-        formControlName="password"
-      />
+    <div class="auth-panel">
+      <nav class="auth-tabs" aria-label="Authentication navigation">
+        <a routerLink="/auth/login" routerLinkActive="is-active">Login</a>
+        <a routerLink="/auth/register" routerLinkActive="is-active">Register</a>
+      </nav>
 
-      <p class="error" *ngIf="error()">{{ error() }}</p>
+      <div class="auth-panel__body">
+        <p class="auth-panel__eyebrow">Create account</p>
+        <h2>Open your management workspace</h2>
+        <p class="auth-panel__intro">
+          Register with your company email or continue with Google for a faster setup.
+        </p>
 
-      <app-button type="submit" [disabled]="form.invalid || loading()">
-        {{ loading() ? "Creating..." : "Create account" }}
-      </app-button>
-    </form>
+        <app-google-signin context="signup" />
 
-    <a routerLink="/auth/login">Already have an account?</a>
+        <div class="auth-divider"><span>or create an account with email</span></div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
+          <div class="auth-form__group">
+            <label for="register-name" class="auth-field-label">Full name</label>
+            <app-input
+              autocomplete="name"
+              inputId="register-name"
+              type="text"
+              formControlName="name"
+              placeholder="Jane Doe"
+            />
+          </div>
+
+          <div class="auth-form__group">
+            <label for="register-email" class="auth-field-label">Work e-mail</label>
+            <app-input
+              autocomplete="email"
+              inputId="register-email"
+              type="email"
+              formControlName="email"
+              placeholder="name@company.com"
+            />
+          </div>
+
+          <div class="auth-form__group">
+            <div class="auth-form__row">
+              <label for="register-password" class="auth-field-label">Password</label>
+              <span class="auth-form__hint">Use at least 8 characters</span>
+            </div>
+            <app-input
+              autocomplete="new-password"
+              inputId="register-password"
+              type="password"
+              formControlName="password"
+              placeholder="Create a password"
+            />
+          </div>
+
+          <p class="auth-agreement">
+            By creating an account, you confirm this workspace can be used to manage client and internal tasks.
+          </p>
+
+          <p class="auth-error" *ngIf="error()">{{ error() }}</p>
+
+          <button class="auth-submit" type="submit" [disabled]="form.invalid || loading()">
+            {{ loading() ? "Creating account..." : "Create workspace account" }}
+          </button>
+        </form>
+
+        <p class="auth-footer">
+          Already have access?
+          <a routerLink="/auth/login">Sign in here</a>
+        </p>
+      </div>
+    </div>
   </div>
 </section>

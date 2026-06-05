@@ -2,16 +2,23 @@ import { NgIf } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Router, RouterLink } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 
 import { AuthService } from "../../../core/services/auth.service";
 import { AppInputComponent } from "../../../shared/ui/input/app-input.component";
-import { AppButtonComponent } from "../../../shared/ui/button/app-button.component";
+import { GoogleSigninComponent } from "../components/google-signin/google-signin.component";
 
 @Component({
   selector: "app-login",
   standalone: true,
-  imports: [AppButtonComponent, AppInputComponent, NgIf, ReactiveFormsModule, RouterLink],
+  imports: [
+    AppInputComponent,
+    GoogleSigninComponent,
+    NgIf,
+    ReactiveFormsModule,
+    RouterLink,
+    RouterLinkActive,
+  ],
   templateUrl: "./login.component.html",
   styleUrl: "../auth.scss",
 })
@@ -22,11 +29,10 @@ export class LoginComponent {
 
   readonly error = signal("");
   readonly loading = signal(false);
-  readonly googleToken = signal("");
 
   readonly form = this.formBuilder.nonNullable.group({
-    email: ["admin@management.local", [Validators.email, Validators.required]],
-    password: ["Admin@12345", [Validators.minLength(8), Validators.required]],
+    email: ["", [Validators.email, Validators.required]],
+    password: ["", [Validators.minLength(8), Validators.required]],
   });
 
   submit(): void {
@@ -39,21 +45,6 @@ export class LoginComponent {
       error: (error: HttpErrorResponse) => {
         this.loading.set(false);
         this.error.set(error.error?.message ?? "Could not login");
-      },
-      next: () => void this.router.navigateByUrl("/"),
-    });
-  }
-
-  submitGoogle(): void {
-    if (!this.googleToken()) return;
-
-    this.loading.set(true);
-    this.error.set("");
-
-    this.authService.googleLogin(this.googleToken()).subscribe({
-      error: (error: HttpErrorResponse) => {
-        this.loading.set(false);
-        this.error.set(error.error?.message ?? "Google login failed");
       },
       next: () => void this.router.navigateByUrl("/"),
     });

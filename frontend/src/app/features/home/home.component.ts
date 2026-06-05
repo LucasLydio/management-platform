@@ -10,9 +10,11 @@ import {
   ViewChild,
   inject,
   signal,
+  viewChild,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, catchError, switchMap, tap, throwError } from "rxjs";
 
 import { TaskService } from "../../core/services/task.service";
@@ -26,11 +28,19 @@ import { NewTaskShelfAnimationComponent } from "../task-animations/components/ne
 import { PendingAlertAnimationComponent } from "../task-animations/components/pending-alert-animation/pending-alert-animation.component";
 import { TaskFormComponent } from "./components/task-form/task-form.component";
 import { NotebookComponent } from "./components/notebook/notebook.component";
+import { AppOptionsComponent } from "./components/options/options.component";
+
 
 type TaskColumn = {
   description: string;
   label: string;
   status: TaskStatus;
+};
+
+type IntegrationFeedback = {
+  linkUrl: string | null;
+  text: string;
+  tone: "error" | "success";
 };
 
 @Component({
@@ -51,7 +61,8 @@ type TaskColumn = {
     ReactiveFormsModule,
     RevealOnViewDirective,
     TaskFormComponent,
-    NotebookComponent
+    NotebookComponent,
+    AppOptionsComponent
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
@@ -63,17 +74,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly formBuilder = inject(FormBuilder);
   private readonly refreshSubject = new BehaviorSubject<void>(undefined);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly taskService = inject(TaskService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly createTaskError = signal("");
   readonly creatingTask = signal(false);
   readonly error = signal("");
+  readonly integrationFeedback = signal<IntegrationFeedback | null>(null);
   readonly filters = this.formBuilder.nonNullable.group({
     search: [""],
     status: ["" as TaskStatus | ""],
   });
-  readonly createTaskForm = inject(NotebookComponent);
+  readonly createTaskForm = viewChild(NotebookComponent);
+
+  handleNewTaskClick() {
+    this.createTaskForm()?.toggle();
+  }
   
   readonly columns: TaskColumn[] = [
     {
@@ -122,6 +140,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.taskService.connectRealtime();
     this.taskService.taskChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.refresh());
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const message = params.get("integrationMessage")?.trim();
+      const status = params.get("integrationStatus");
+      const pageUrl = params.get("integrationPageUrl");
+
+      if (!message || (status !== "error" && status !== "success")) return;
+
+      this.integrationFeedback.set({
+        linkUrl: pageUrl,
+        text: message,
+        tone: status,
+      });
+      void this.router.navigate([], {
+        queryParams: {},
+        replaceUrl: true,
+        relativeTo: this.route,
+      });
+    });
   }
 
   ngOnDestroy(): void {

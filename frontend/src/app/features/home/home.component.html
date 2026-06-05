@@ -1,70 +1,40 @@
-<section class="">
-  <div class="tasks-panel">
+<section class="home-page">
+  <!-- <img
+    src="assets/img/web.png"
+    alt=""
+    class="home-page__web-image"
+    aria-hidden="true"
+  /> -->
 
+  <div class="home-page-main">
     <p class="error" *ngIf="error()">{{ error() }}</p>
+    @if (integrationFeedback(); as feedback) {
+      <p class="integration-feedback" [class.integration-feedback--error]="feedback.tone === 'error'">
+        {{ feedback.text }}
+        <a *ngIf="feedback.linkUrl" [href]="feedback.linkUrl" rel="noreferrer" target="_blank">
+          Open in Notion
+        </a>
+      </p>
+    }
+
     <div class="options">
-      <h4>Let's Start?!</h4>
-      <app-button (click)="createTaskForm.toggle()">
-        <p>New Task,</p>
-        <p>Click Here!</p>
-      </app-button>
-    </div>
-    <app-notebook></app-notebook>
+      <h3>Let's Start?!</h3>
 
-    <ng-container *ngIf="tasks$ | async as response">
-    </ng-container>
+      <div class="new-task-cta">
+        <app-button (click)="handleNewTaskClick()">
+          <h6>New Task,</h6>
+          <h6>Click Here!</h6>
+        </app-button>
 
-    <!-- <ng-container *ngIf="tasks$ | async as response">
-      <div class="board" cdkDropListGroup *ngIf="response.data.length; else emptyState">
-        <section
-          class="task-column"
-          *ngFor="let column of columns; trackBy: trackColumn; let columnIndex = index"
-          [ngClass]="'task-column--' + column.status.toLowerCase()"
-          appRevealOnView
-          [style.--motion-index]="columnIndex"
-        >
-          <header class="task-column__header">
-            <div class="task-column__animation">
-              <app-new-task-shelf-animation *ngIf="column.status === 'TODO'" />
-              <app-due-box-animation *ngIf="column.status === 'IN_PROGRESS'" />
-              <app-task-notebook-animation *ngIf="column.status === 'DONE'" />
-              <span class="archive-column-icon" *ngIf="column.status === 'ARCHIVED'" aria-hidden="true">
-                <i class="bi bi-archive"></i>
-              </span>
-            </div>
-
-            <div>
-              <h4>{{ column.label }}</h4>
-              <p>{{ column.description }}</p>
-            </div>
-
-            <span class="task-column__count">{{ tasksByStatus(response.data, column.status).length }}</span>
-          </header>
-
-          <div
-            class="task-column__dropzone"
-            cdkDropList
-            [cdkDropListData]="column.status"
-            (cdkDropListDropped)="dropTask($event)"
-          >
-            <app-task-card
-              *ngFor="let task of tasksByStatus(response.data, column.status); trackBy: trackTask; let taskIndex = index"
-              cdkDrag
-              [cdkDragData]="task"
-              [task]="task"
-              [motionIndex]="taskIndex"
-              (deleteTask)="deleteTask($event)"
-              (statusChange)="updateStatus($event)"
-            />
-
-            <div class="column-empty" *ngIf="!tasksByStatus(response.data, column.status).length">
-              Drop tasks here
-            </div>
-          </div>
-        </section>
+        <span class="click-hint" aria-hidden="true">
+          <i class="bi bi-hand-index-thumb-fill"></i>
+        </span>
       </div>
 
-    </ng-container> -->
+      <app-options [taskId]="createTaskForm()?.selectedTask()?.id ?? null"></app-options>
+    </div>
+
+    <app-notebook></app-notebook>
   </div>
 </section>
 
@@ -75,47 +45,3 @@
     <span>Add one and give future-you a breadcrumb.</span>
   </div>
 </ng-template>
-
-<ng-container *ngIf="isCreateTaskModalOpen()">
-  <div class="task-modal-backdrop" (click)="closeCreateTaskModal()"></div>
-
-  <section
-    class="task-modal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="createTaskModalTitle"
-    (click)="$event.stopPropagation()"
-  >
-    <header class="task-modal__header">
-      <div>
-        <p class="eyebrow">Create task</p>
-        <h2 id="createTaskModalTitle">Add new task</h2>
-      </div>
-
-      <button type="button" class="btn-close" aria-label="Close modal" (click)="closeCreateTaskModal()"></button>
-    </header>
-
-    <div class="task-modal__body">
-      <p class="modal-hint">Capture the task now. Sort it later with drag and drop.</p>
-
-      <p class="error" *ngIf="createTaskError()">{{ createTaskError() }}</p>
-
-      <app-task-form
-        formId="create-task-form"
-        [showActions]="false"
-        (taskCreated)="createTask($event)"
-      />
-    </div>
-
-    <footer class="task-modal__footer">
-      <app-button variant="ghost" [disabled]="creatingTask()" (click)="closeCreateTaskModal()">Cancel</app-button>
-      <app-button
-        form="create-task-form"
-        type="submit"
-        [disabled]="isCreateSubmitDisabled()"
-      >
-        {{ creatingTask() ? "Creating..." : "Create task" }}
-      </app-button>
-    </footer>
-  </section>
-</ng-container>

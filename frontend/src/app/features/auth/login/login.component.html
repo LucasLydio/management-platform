@@ -1,45 +1,93 @@
-<section class="auth-page">
-  <div class="auth-card">
-    <p class="eyebrow">Welcome back</p>
-    <h1>Sign in and ship your tasks.</h1>
-    <p class="muted">Use the seeded admin account after running the backend seed.</p>
+<section class="auth-shell auth-shell--signin">
+  <div class="auth-layout">
+    <aside class="auth-showcase">
+      <a routerLink="/auth/login" class="auth-brand">Management Tasks</a>
+      <p class="auth-kicker">Secure workspace access</p>
+      <h1>Operate your team from one calm, reliable control center.</h1>
+      <p class="auth-lead">
+        Sign in to monitor priorities, sync real-time task movement, and keep every delivery lane visible.
+      </p>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
-      <app-input
-        autocomplete="email"
-        inputId="login-email"
-        label="E-mail"
-        type="email"
-        formControlName="email"
-      />
+      <div class="auth-highlights">
+        <article class="auth-highlight-card">
+          <span>01</span>
+          <strong>Protected sessions</strong>
+          <p>Access tokens plus refresh cookies keep the experience seamless without relaxing security.</p>
+        </article>
+        <article class="auth-highlight-card">
+          <span>02</span>
+          <strong>Live team activity</strong>
+          <p>Updates stream into the board as work changes, helping leads and contributors stay aligned.</p>
+        </article>
+      </div>
 
-      <app-input
-        autocomplete="current-password"
-        inputId="login-password"
-        label="Password"
-        type="password"
-        formControlName="password"
-      />
+      <ul class="auth-proof">
+        <li><i class="bi bi-shield-check"></i> Google account onboarding for verified company identities</li>
+        <li><i class="bi bi-broadcast-pin"></i> Real-time tasks connected to authenticated sessions</li>
+        <li><i class="bi bi-grid-1x2"></i> Fast routing to login and registration from the same auth hub</li>
+      </ul>
+    </aside>
 
-      <p class="error" *ngIf="error()">{{ error() }}</p>
+    <div class="auth-panel">
+      <nav class="auth-tabs" aria-label="Authentication navigation">
+        <a routerLink="/auth/login" routerLinkActive="is-active">Login</a>
+        <a routerLink="/auth/register" routerLinkActive="is-active">Register</a>
+      </nav>
 
-      <app-button type="submit" [disabled]="form.invalid || loading()">
-        {{ loading() ? "Signing in..." : "Sign in" }}
-      </app-button>
-    </form>
+      <div class="auth-panel__body">
+        <p class="auth-panel__eyebrow">Welcome back</p>
+        <h2>Sign in to your workspace</h2>
+        <p class="auth-panel__intro">
+          Continue with Google or use your email credentials to open your dashboard.
+        </p>
 
-    <div class="google-box">
-      <app-input
-        inputId="google-id-token"
-        label="Google ID token"
-        placeholder="Paste the Google ID token"
-        type="text"
-        [value]="googleToken()"
-        (valueChange)="googleToken.set($any($event))"
-      />
-      <app-button variant="ghost" (click)="submitGoogle()">Continue with Google</app-button>
+        <app-google-signin context="signin" />
+
+        <div class="auth-divider"><span>or continue with email</span></div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
+          <div class="auth-form__group">
+            <label for="login-email" class="auth-field-label">Work e-mail</label>
+            <app-input
+              autocomplete="email"
+              inputId="login-email"
+              type="email"
+              formControlName="email"
+              placeholder="name@company.com"
+            />
+          </div>
+
+          <div class="auth-form__group">
+            <div class="auth-form__row">
+              <label for="login-password" class="auth-field-label">Password</label>
+              <span class="auth-form__hint">Minimum 8 characters</span>
+            </div>
+            <app-input
+              autocomplete="current-password"
+              inputId="login-password"
+              type="password"
+              formControlName="password"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <div class="auth-seed-note">
+            <span>Local seed account</span>
+            <strong>admin&#64;management.local / Admin&#64;12345</strong>
+          </div>
+
+          <p class="auth-error" *ngIf="error()">{{ error() }}</p>
+
+          <button class="auth-submit" type="submit" [disabled]="form.invalid || loading()">
+            {{ loading() ? "Signing in..." : "Sign in securely" }}
+          </button>
+        </form>
+
+        <p class="auth-footer">
+          Need a workspace?
+          <a routerLink="/auth/register">Create your account</a>
+        </p>
+      </div>
     </div>
-
-    <a routerLink="/auth/register">Create an account</a>
   </div>
 </section>

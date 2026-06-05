@@ -63,6 +63,13 @@ const makeSession = (user: {
 };
 
 export class AuthService {
+  googleConfig() {
+    return {
+      clientId: env.GOOGLE_CLIENT_ID,
+      enabled: Boolean(env.GOOGLE_CLIENT_ID),
+    };
+  }
+
   async register(input: { email: string; name: string; password: string }) {
     const existingUser = await authRepository.findByEmail(input.email);
     if (existingUser) throw new AppError("E-mail already registered", 409);
@@ -136,4 +143,3 @@ export class AuthService {
     await authRepository.update(userId, { tokenVersion: { increment: 1 } });
   }
 }
-

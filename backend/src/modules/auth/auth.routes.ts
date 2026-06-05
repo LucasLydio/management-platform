@@ -63,6 +63,14 @@ authRoutes.post("/google", async (request, response, next) => {
   }
 });
 
+authRoutes.get("/google/config", async (_request, response, next) => {
+  try {
+    response.status(200).json({ data: authService.googleConfig() });
+  } catch (error) {
+    next(error);
+  }
+});
+
 authRoutes.post("/refresh", async (request, response, next) => {
   try {
     const session = await authService.refresh(request.cookies[env.COOKIE_NAME]);

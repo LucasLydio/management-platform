@@ -1,9 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, computed, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable, tap } from "rxjs";
+import { Observable, shareReplay, tap } from "rxjs";
 
 import { environment } from "../../../environments/environment";
+import type { GoogleAuthProviderConfig } from "../types/auth.types";
 import type { ApiResponse } from "../types/api.types";
 import type { AuthSession, User } from "../types/user.types";
 
@@ -16,6 +17,9 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly tokenSignal = signal<string | null>(localStorage.getItem(TOKEN_KEY));
   private readonly userSignal = signal<User | null>(this.readUser());
+  private readonly googleConfigRequest$ = this.http
+    .get<ApiResponse<GoogleAuthProviderConfig>>(`${environment.apiUrl}/auth/google/config`)
+    .pipe(shareReplay(1));
 
   readonly currentUser = computed(() => this.userSignal());
   readonly isAuthenticated = computed(() => Boolean(this.tokenSignal() && this.userSignal()));
@@ -44,6 +48,10 @@ export class AuthService {
         { withCredentials: true },
       )
       .pipe(tap((response) => this.persistSession(response.data)));
+  }
+
+  googleConfig(): Observable<ApiResponse<GoogleAuthProviderConfig>> {
+    return this.googleConfigRequest$;
   }
 
   refresh(): Observable<ApiResponse<AuthSession>> {
@@ -91,4 +99,3 @@ export class AuthService {
     return value ? (JSON.parse(value) as User) : null;
   }
 }
-

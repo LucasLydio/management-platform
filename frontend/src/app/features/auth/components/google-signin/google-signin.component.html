@@ -1,0 +1,17 @@
+<section class="auth-google">
+  <div class="auth-google__surface">
+    <div class="auth-google__copy">
+      <strong>Continue with Google</strong>
+    </div>
+
+    <div class="auth-google__action">
+      <div #buttonHost class="auth-google__button" [class.auth-google__button--busy]="loading() || submitting()"></div>
+      <button class="auth-google__fallback" type="button" *ngIf="!loading() && !isAvailable()" disabled>
+        Google sign-in unavailable
+      </button>
+    </div>
+  </div>
+
+  <p class="auth-google__status" *ngIf="submitting()">Finishing your secure sign-in...</p>
+  <p class="auth-google__error" *ngIf="error()">{{ error() }}</p>
+</section>
